@@ -1,26 +1,21 @@
 FROM node:lts-slim AS base
 
+WORKDIR /app
+RUN apt update \
+    && yarn install
+
+COPY ./front .
+
+RUN npm run build
+
 # 開発用環境
 FROM base AS dev
-# 開発用のentrypointと、実施コマンドを用意する・使用するフレームワークに準ずる
-COPY entrypoint.dev.sh /
-RUN chmod +x /entrypoint.dev.sh
-
-ENTRYPOINT ["/entrypoint.dev.sh"]
-
-WORKDIR /app
-
-CMD ["/bin/ash"]
 
 # 本番環境用
-FROM base AS  prod
-# 本番環境にビルドするentrypointと実施コマンドを用意する
+FROM nginx:stable-alpine as base
 
-COPY entrypoint.prod.sh /
-RUN chmod +x /entrypoint.prod.sh
+COPY --from=build-stage /app/dist /usr/share/nginx/html
 
-ENTRYPOINT ["/entrypoint.prod.sh"]
+EXPOSE 5173
 
-WORKDIR /app
-
-CMD ["/bin/ash"]
+CMD ["nginx", "-g", "daemon off;"]

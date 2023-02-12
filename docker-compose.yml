@@ -7,8 +7,8 @@ services:
   nginx:
     container_name: nginx
     build:
-      context: ./.docker/nginx
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./.docker/nginx/Dockerfile
     ports:
       - ${WEB_PORT}:80
     tty: true
@@ -18,11 +18,9 @@ services:
   front:
     container_name: front
     build:
-      context: ./.docker/front
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./.docker/front/Dockerfile
       target: dev
-    expose:
-      - 3000
     volumes:
       - ./front:/app:cached
     stdin_open: true
@@ -30,12 +28,15 @@ services:
     restart: always
     depends_on:
       - api
+    ports:
+      - '5173:5173'
+    command: npm run dev
 
   api:
     container_name: api
     build:
-      context: ./.docker/api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./.docker/api/Dockerfile
       target: dev
     environment:
       DB_CONNECTION: mysql
@@ -47,16 +48,17 @@ services:
       LANG: ja_JP.UTF-8
       TZ: 'Asia/Tokyo'
     volumes:
-      - ./api:/app:cached
+      - ./api:/var/www/html
     expose:
       - 9000
     tty: true
     restart: always
+
   db:
     container_name: db
     build:
-      context: ./.docker/db
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./.docker/db/Dockerfile
     ports:
       - ${DB_PORT}:3306
     environment:

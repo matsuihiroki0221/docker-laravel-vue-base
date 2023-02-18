@@ -2,8 +2,10 @@ name: Laravel
 
 on:
   push:
-    branches: [ "main" , "master" ]
-    paths: [ /api/**" ]
+    branches:
+      - main
+    paths: [ "main" , "master" ]
+      - '/api/**'
   pull_request:
     branches: [ "main", "master" ]
   

@@ -10,8 +10,9 @@ jobs:
   laravel-tests:
 
     runs-on: ubuntu-latest
-    run:
-        shell: bash
+    
+    defaults:
+      run:
         working-directory: ./api
 
     steps:

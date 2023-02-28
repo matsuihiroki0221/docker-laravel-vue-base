@@ -1,7 +1,15 @@
-FROM nginx:alpine-slim
+FROM nginx:alpine-slim AS base
 
 ENV TZ Asia/Tokyo
 
-COPY .docker/nginx/conf/default.conf /etc/nginx/conf.d/default.conf
+COPY ./api /var/www/html
 
-COPY ./api /var/www/html/public
+FROM base AS dev
+
+COPY .docker/nginx/conf/default.dev.conf /etc/nginx/conf.d/default.conf
+
+
+
+FROM base AS prod
+
+COPY .docker/nginx/conf/default.prod.conf /etc/nginx/conf.d/default.conf

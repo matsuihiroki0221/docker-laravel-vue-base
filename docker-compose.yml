@@ -28,8 +28,9 @@ services:
     depends_on:
       - api
     ports:
-      - '5173:5173'
-    command: npm run dev
+      - '3000:3000' 
+      - '24678:24678' 
+    command: yarn dev -o
 
   api:
     container_name: api
@@ -55,9 +56,7 @@ services:
 
   db:
     container_name: db
-    build:
-      context: .
-      dockerfile: ./.docker/db/Dockerfile
+    image: mysql:8.0
     ports:
       - ${DB_PORT}:3306
     environment:
@@ -68,3 +67,4 @@ services:
       TZ: 'Asia/Tokyo'
     volumes:
       - mysql-volume:/var/lib/mysql:cached
+      - ./.docker/db/my.cnf:/etc/my.cnf

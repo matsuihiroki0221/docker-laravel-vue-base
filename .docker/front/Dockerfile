@@ -1,27 +1,24 @@
-FROM node:lts-slim AS base
+FROM node:lts-bullseye-slim AS base
 
 WORKDIR /app
-RUN apt update
 
 COPY ./front .
 
-COPY .docker/front/entrypoint.sh /
 
-RUN chmod +x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+RUN apt-get update\
+    && yarn install
 
 
 # 開発用環境
 FROM base AS dev
 
-CMD ["/bin/ash"]
+CMD ["/bin/bash"]
 
 # 本番環境用
-FROM nginx:stable-alpine as prod
+# FROM nginx:stable-alpine as prod
 
-COPY --from=base /app/dist /usr/share/nginx/html
+# COPY --from=base /app/dist /usr/share/nginx/html
 
-EXPOSE 5173
+# EXPOSE 5173
 
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["nginx", "-g", "daemon off;"]

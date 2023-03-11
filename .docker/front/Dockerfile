@@ -4,10 +4,8 @@ WORKDIR /app
 
 COPY ./front .
 
-
 RUN apt-get update\
-    && yarn install
-
+    && npm install
 
 # 開発用環境
 FROM base AS dev
